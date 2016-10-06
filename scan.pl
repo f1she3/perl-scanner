@@ -3,7 +3,7 @@
 use strict;
 use HTTP::Request;
 use LWP::UserAgent;
-use Term::ANSIColor;																														#Shell colors
+use Term::ANSIColor;																														#Colors
 use File::Basename;																															#Get the filename
 use Getopt::Long;																															
 
@@ -27,16 +27,15 @@ $results = GetOptions(
     't=i'   => \$c_down,
     'v'   	=> \$verbose,
 );
-																																			#lc : URL -> url
+
 if(!defined($address) || !defined($wordlist)){
-    print "Usage   : perl ./$file_name <site> <wordlist>\n";
-    print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n";
-    print "Exemple : perl ./$file_name -h http://site.com -l wordlist.txt\n\n";
+    print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
+    print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n\n";
     print "Type 'perldoc $file_name' for more informations\n\n";
     exit;
 }
 chomp $address;
-$address = lc($address);																										
+$address = lc($address);																													#Lowcase																										
 if($address){
 	if($address !~ /^(https?:\/\/)/){
 		$address = 'http://' . $address;
@@ -141,13 +140,13 @@ Version 1.3 Beta
 
 =head1 AUTHOR
 
-R04A
+F1SHER
 
 =head1 DESCRIPTION
 
 This is a nice perl admin page finder that can be used with several options, such as a cooldown between 404 requests
 
-=head1 ALL THE OPTIONS
+=head1 OPTIONS
 
 =head2 -h (host)
 	The target, a domain name or an ip address
@@ -156,7 +155,7 @@ This is a nice perl admin page finder that can be used with several options, suc
 	The wordlist to use for the attack, a .txt file. See the exemple
 
 =head2 -t (time, default to 0)
-	Number that defines the time (sec) to wait between the 404 requests.
+	Number that defines the time (sec) to wait between the 404 requests
 
 =head2 -v (verbose, default to none)
 	Verbose mode, shows all the requests, even the 404
