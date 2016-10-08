@@ -37,13 +37,13 @@ if(!defined($address) || !defined($wordlist)){
 chomp $address;
 $address = lc($address);																													#Lowcase																										
 if($address){
-	if($address !~ /^(https?:\/\/)/){
+	if($address !~ /^https?:/){
 		$address = 'http://' . $address;
 	}
     if($address !~ /\/$/){                                                                                                              
         $address = $address . '/';
     }
-    if($address !~ /^(https?:\/\/)[a-zA-Z0-9\\\/\.-]/){                                                                 					#Checking http pattern
+    if($address !~ /^https?:[a-zA-Z0-9\\\/\.-]/){	                                                                 						#Checking http pattern
         print color 'red';
         print "\n[FATAL ERROR] Invalid URL\n\n";
         print color 'reset';
