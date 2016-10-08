@@ -7,7 +7,7 @@ use Term::ANSIColor;																														#Colors
 use File::Basename;																															#Get the filename
 use Getopt::Long;																															
 
-my($time,$file_name,$address, $c_down,$wordlist,$f, $results, $verbose);
+my($time,$file_name,$host,$c_down,$wordlist,$i,$options,$verbose,$list);
 my($final,$req,$ua,$page);
 $time = time;
 $file_name = basename $0;
@@ -21,29 +21,29 @@ print "-------------------- F1SHER --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
-$results = GetOptions(
-    'h=s'   => \$address,
+$options = GetOptions(
+    'h=s'   => \$host,
     'l=s'   => \$wordlist,
     't=i'   => \$c_down,
     'v'   	=> \$verbose,
 );
 
-if(!defined($address) || !defined($wordlist)){
+if(!defined($host) || !defined($wordlist)){
     print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
     print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n\n";
     print "Type 'perldoc $file_name' for more informations\n\n";
     exit;
 }
-chomp $address;
-$address = lc($address);																													#Lowcase																										
-if($address){
-	if($address !~ /^https?:/){
-		$address = 'http://' . $address;
+chomp $host;
+$host = lc($host);																															#Lowcase																										
+if($host){
+	if($host !~ /^https?:/){
+		$host = 'http://' . $host;
 	}
-    if($address !~ /\/$/){                                                                                                              
-        $address = $address . '/';
+    if($host !~ /\/$/){                                                                                                              
+        $host = $host . '/';
     }
-    if($address !~ /^https?:[a-zA-Z0-9\\\/\.-]/){	                                                                 						#Checking http pattern
+    if($host !~ /^https?:[a-zA-Z0-9\\\/\.-]/){	                                                                 						#Checking http pattern
         print color 'red';
         print "\n[FATAL ERROR] Invalid URL\n\n";
         print color 'reset';
@@ -59,11 +59,11 @@ if($address){
 	}
 	if(open(LIST, $wordlist)){
 		print color 'yellow';
-		print "[SCANNING] $address\n\n";
-		while(my $list = <LIST>){
+		print "[SCANNING] $host\n\n";
+		while($list = <LIST>){
 			print color 'reset';
 			chomp $list;
-			$final = $address.$list;
+			$final = $host.$list;
 			$req = HTTP::Request->new(GET=>$final);
 			$ua = LWP::UserAgent->new();
 			$ua->timeout(30);
@@ -85,7 +85,7 @@ if($address){
 					print color 'yellow';
 					print "[!] Forbidden -> ";
 					print $final, "\n";
-					$f = 1;
+					$i = 1;
 					print color 'reset';
 					sleep($c_down);
 				
@@ -94,14 +94,14 @@ if($address){
 						print color 'green';
 						print "[+] Access OK -> ";
 						print $final, "\n";
-						$f = 1;
+						$i = 1;
 						print color 'reset';
 					
 					}else{
 						print color 'BRIGHT_YELLOW';
 						print "[*] HTTP ", $page->code(), "  -> ";
 						print $final, "\n";
-						$f = 1;
+						$i = 1;
 						print color 'reset';
 					}
 				}
@@ -118,7 +118,7 @@ if($address){
 
 $time = time-$time;
 
-if(!$f){
+if(!$i){
 	print color 'red';
 	print "NOTHING FOUND !\n";
 	print color 'reset';
