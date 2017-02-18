@@ -14,7 +14,6 @@ readme.php
 INSTALL.sqlite.txt
 CHANGELOG.txt
 UPGRADE.txt
-upgrade.txt
 :2082
 phpmyadmin2
 phpMyAdmin2
@@ -908,6 +907,7 @@ foto
 diendan3
 php
 phpbb
+phpbb/install
 awstats
 test
 img-sys
