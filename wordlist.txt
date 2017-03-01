@@ -7345,3 +7345,5 @@ furukawa
 fusebox
 fusen
 fusetalk
+ecedi
+ecedi/ewb_admin
