@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 use strict;
 use HTTP::Request;
@@ -16,8 +16,8 @@ print color 'reset';
 print"\n";
 print "------------------------------------------------\n";
 print "--------------------[ PERL ]--------------------\n";
-print "--------Admin Control Panel Finder v 1.3--------\n";
-print "-------------------- F1SHER --------------------\n";
+print "--------Admin Panel Finder v 1.3--------\n";
+print "-------------------- F1SHE3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
@@ -27,11 +27,13 @@ $options = GetOptions(
     't=i'   => \$c_down,
     'v'   	=> \$verbose,
 );
-
-if(!defined($host) || !defined($wordlist)){
+if(!defined($wordlist)){
+	$wordlist = 'wordlist.txt';
+}
+if(!defined($host)){
     print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
     print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n\n";
-    print "Type 'perldoc $file_name' for more informations\n\n";
+    print "\"perldoc $file_name\" for more informations\n\n";
     exit;
 }
 chomp $host;
@@ -131,35 +133,29 @@ exit;
 __END__
 
 =head1 VERSION
-
-Version 1.3 Beta
-
-=head1 DATE
-
-26/06/2016
+Version 1.4
 
 =head1 AUTHOR
 
-F1SHER
+F1SHE3
 
 =head1 DESCRIPTION
 
-This is a nice perl admin page finder that can be used with several options, such as a cooldown between 404 requests
+Admin panel bruteforcer that comes with several (cool) options
 
 =head1 OPTIONS
 
-=head2 -h (host)
+=head2 -h (host, required)
 	The target, a domain name or an ip address
 
-=head2 -l (list or wordlist)
-	The wordlist to use for the attack, a .txt file. See the exemple
+=head2 -l (wordlist, defautl to wordlist.txt)
+	The wordlist to use for the bruteforce, a .txt file
 
 =head2 -t (time, default to 0)
-	Number that defines the time (sec) to wait between the 404 requests
+	Number that defines the time number of sec to wait between the 404 requests
 
 =head2 -v (verbose, default to none)
-	Verbose mode, shows all the requests, even the 404
+	Verbose mode, shows all requests (even 404)
 
 =head1 MORE
-Please report any problem or commentary to the github repo, do not use it against websites that aren't yours.
-
+Please give your suggestions / reports to the github repo
