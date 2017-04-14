@@ -1,16 +1,17 @@
 #!/usr/bin/env perl
 
 use strict;
+use warnings;
 use HTTP::Request;
 use LWP::UserAgent;
-use Term::ANSIColor;																														#Colors
-use File::Basename;																															#Get the filename
-use Getopt::Long;																															
+use Term::ANSIColor;
+use File::Basename;
+use Getopt::Long;
+use Switch;
 
-my($time,$file_name,$host,$c_down,$wordlist,$i,$options,$verbose,$list);
 my($final,$req,$ua,$page);
-$time = time;
-$file_name = basename $0;
+my $time = time;
+my $file_name = basename $0;
 system('clear');
 print color 'reset';
 print"\n";
@@ -21,14 +22,16 @@ print "-------------------- F1SHE3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
-$options = GetOptions(
-    'h=s'   => \$host,
-    'l=s'   => \$wordlist,
-    't=i'   => \$c_down,
-    'v'   	=> \$verbose,
+my $i = 0;
+my $wordlist = 'wordlist.txt';
+my $options = GetOptions(
+    'h=s'   => \my $host,
+    'l=s'   => \my $custom_wordlist,
+    't=i'   => \my $cool_down,
+    'v'   	=> \my $verbose,
 );
-if(!defined($wordlist)){
-	$wordlist = 'wordlist.txt';
+if(defined($custom_wordlist)){
+	$wordlist = $custom_wordlist;
 }
 if(!defined($host)){
     print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
@@ -37,89 +40,87 @@ if(!defined($host)){
     exit;
 }
 chomp $host;
-$host = lc($host);																															#Lowcase																										
+$host = lc($host);
 if($host){
 	if($host !~ /^https?:/){
-		$host = 'http://' . $host;
+		$host = 'http://'.$host;
 	}
     if($host !~ /\/$/){                                                                                                              
-        $host = $host . '/';
+        $host = $host.'/';
     }
-    if($host !~ /^https?:[a-zA-Z0-9\\\/\.-]/){	                                                                 						#Checking http pattern
-        print color 'red';
-        print "\n[FATAL ERROR] Invalid URL\n\n";
-        print color 'reset';
-        exit;
+    if($host !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/){
+		if($host !~ /^(https?:\/\/)[0-9]{1,3}(\.([0-9]){1,3}){3}\/$/){
+			print color 'red';
+			print "\n[FATAL ERROR] Invalid URL\n\n";
+			print color 'reset';
+			exit;
+		}
     }
-    if(!defined($c_down)){
-		$c_down = 0;
+    if(defined($cool_down)){
+		if($cool_down !~ /^[0-9]{1,}$/){
+			$cool_down = 0;
+		}
 	
 	}else{
-		if($c_down !~ /^[0-9]{1,}$/){
-			$c_down = 0;
-		}
+		$cool_down = 0;
 	}
 	if(open(LIST, $wordlist)){
 		print color 'yellow';
 		print "[SCANNING] $host\n\n";
-		while($list = <LIST>){
+		while(my $list = <LIST>){
 			print color 'reset';
 			chomp $list;
-			$final = $host.$list;
-			$req = HTTP::Request->new(GET=>$final);
-			$ua = LWP::UserAgent->new();
+			my $final = $host.$list;
+			my $req = HTTP::Request->new(GET=>$final);
+			my $ua = LWP::UserAgent->new();
 			$ua->timeout(30);
-			$page = $ua->request($req);
-			if($page->code() == 404){
-				if(defined($verbose)){
-					print color 'red';
-					print "[-] Not Found -> ";
-					print $final, "\n";
-					sleep($c_down);
-				
-				}else{
-					print color 'reset';
-					sleep($c_down);
+			my $page = $ua->request($req);
+			switch($page->code()){
+				case 404{
+					if(defined($verbose)){
+						print color 'red';
+						print "[-] Not Found -> ";
+						print $final, "\n";
+						sleep($cool_down);
+					
+					}else{
+						print color 'reset';
+						sleep($cool_down);
+					}
 				}
-			
-			}else{
-				if($page->code() == 403){
+				case(403){
 					print color 'yellow';
 					print "[!] Forbidden -> ";
 					print $final, "\n";
+					my $i = 1;
+					print color 'reset';
+					sleep($cool_down);
+				}
+				case(200){
+					print color 'green';
+					print "[+] Access OK -> ";
+					print $final, "\n";
 					$i = 1;
 					print color 'reset';
-					sleep($c_down);
-				
-				}else{
-					if($page->code() == 200){
-						print color 'green';
-						print "[+] Access OK -> ";
-						print $final, "\n";
-						$i = 1;
-						print color 'reset';
-					
-					}else{
-						print color 'BRIGHT_YELLOW';
-						print "[*] HTTP ", $page->code(), "  -> ";
-						print $final, "\n";
-						$i = 1;
-						print color 'reset';
-					}
+				}
+				default{
+					print color 'BRIGHT_YELLOW';
+					print "[*] HTTP ", $page->code(), "  -> ";
+					print $final, "\n";
+					$i = 1;
+					print color 'reset';
 				}
 			}
 		}
 
 	}else{
 		print color 'red';
-		print  "\n[FATAL ERROR] wordlist $wordlist wasn't found !\n\n";
+		print  "[FATAL ERROR] wordlist $wordlist wasn't found !\n\n";
 		print color 'reset';
 		exit;
 	}
 }
-
 $time = time-$time;
-
 if(!$i){
 	print color 'red';
 	print "NOTHING FOUND !\n";
