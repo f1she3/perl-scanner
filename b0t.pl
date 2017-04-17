@@ -9,10 +9,15 @@ use File::Basename;
 use Getopt::Long;
 use Switch;
 
+#Keyboard interrupt handling
+local $SIG{INT} = sub {
+	print color 'reset';
+	print "\n";
+    exit 0;
+};
 my $time = time;
 my $file_name = basename $0;
 system('clear');
-print color 'reset';
 print"\n";
 print "------------------------------------------------\n";
 print "--------------------[ PERL ]--------------------\n";
@@ -21,12 +26,6 @@ print "-------------------- F1SHE3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
-#Keyboard interrupt handling
-local $SIG{INT} = sub {
-	print color 'reset';
-	print "\n";
-    exit 0;
-};
 my $i = 0;
 my $wordlist = 'wordlist.txt';
 my $options = GetOptions(
@@ -42,7 +41,7 @@ if(!defined($host)){
     print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
     print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n\n";
     print "\"perldoc $file_name\" for more informations\n\n";
-    exit;
+    exit 1;
 }
 chomp $host;
 $host = lc($host);
@@ -57,7 +56,6 @@ if($host){
 		if($host !~ /^(https?:\/\/)[0-9]{1,3}(\.([0-9]){1,3}){3}\/$/){
 			print color 'red';
 			print "\n[FATAL ERROR] Invalid URL\n\n";
-			print color 'reset';
 			exit;
 		}
     }
@@ -73,7 +71,6 @@ if($host){
 		print color 'yellow';
 		print "[SCANNING] $host\n\n";
 		while(my $list = <LIST>){
-			print color 'reset';
 			chomp $list;
 			my $final = $host.$list;
 			my $req = HTTP::Request->new(GET=>$final);
@@ -89,7 +86,6 @@ if($host){
 						sleep($cool_down);
 					
 					}else{
-						print color 'reset';
 						sleep($cool_down);
 					}
 				}
@@ -98,7 +94,6 @@ if($host){
 					print "[!] Forbidden -> ";
 					print $final, "\n";
 					my $i = 1;
-					print color 'reset';
 					sleep($cool_down);
 				}
 				case(200){
@@ -106,14 +101,12 @@ if($host){
 					print "[+] Access OK -> ";
 					print $final, "\n";
 					$i = 1;
-					print color 'reset';
 				}
 				default{
 					print color 'BRIGHT_YELLOW';
 					print "[*] HTTP ", $page->code(), "  -> ";
 					print $final, "\n";
 					$i = 1;
-					print color 'reset';
 				}
 			}
 		}
@@ -121,7 +114,6 @@ if($host){
 	}else{
 		print color 'red';
 		print  "[FATAL ERROR] wordlist $wordlist wasn't found !\n\n";
-		print color 'reset';
 		exit;
 	}
 }
@@ -129,7 +121,6 @@ $time = time-$time;
 if(!$i){
 	print color 'red';
 	print "NOTHING FOUND !\n";
-	print color 'reset';
 }
 print color 'green';
 print "\nEND (",$time, "s)\n\n";
