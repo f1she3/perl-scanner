@@ -9,7 +9,6 @@ use File::Basename;
 use Getopt::Long;
 use Switch;
 
-my($final,$req,$ua,$page);
 my $time = time;
 my $file_name = basename $0;
 system('clear');
@@ -22,6 +21,12 @@ print "-------------------- F1SHE3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
+#Keyboard interrupt handling
+local $SIG{INT} = sub {
+	print color 'reset';
+	print "\n";
+    exit 0;
+};
 my $i = 0;
 my $wordlist = 'wordlist.txt';
 my $options = GetOptions(
