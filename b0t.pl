@@ -18,6 +18,7 @@ local $SIG{INT} = sub {
 my $time = time;
 my $file_name = basename $0;
 system('clear');
+
 print"\n";
 print "------------------------------------------------\n";
 print "--------------------[ PERL ]--------------------\n";
@@ -27,7 +28,7 @@ print "------------------------------------------------\n";
 print "\n";
 
 my $i = 0;
-my $wordlist = 'wordlist.txt';
+my $wordlist = 'wordlists/all.txt';
 my $options = GetOptions(
     'h=s'   => \my $host,
     'l=s'   => \my $custom_wordlist,
@@ -39,7 +40,7 @@ if(defined($custom_wordlist)){
 }
 if(!defined($host)){
     print "Usage   : perl ./$file_name -h <site> -l <wordlist>\n";
-    print "Exemple : perl ./$file_name -h site.com -l wordlist.txt\n\n";
+    print "Exemple : perl ./$file_name -h site.com -l wordpress.txt\n\n";
     print "\"perldoc $file_name\" for more informations\n\n";
     exit 1;
 }
