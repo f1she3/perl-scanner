@@ -21,9 +21,9 @@ system('clear');
 
 print"\n";
 print "------------------------------------------------\n";
-print "--------------------[ PERL ]--------------------\n";
-print "--------Admin Panel Finder v 1.3--------\n";
-print "-------------------- F1SHE3 --------------------\n";
+print "------------------- [ PERL ] -------------------\n";
+print "------- Admin Panel Finder v 1.3 ---------------\n";
+print "-------------------- f1she3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
@@ -50,27 +50,26 @@ if($host){
 	if($host !~ /^https?:/){
 		$host = 'http://'.$host;
 	}
-    if($host !~ /\/$/){                                                                                                              
-        $host = $host.'/';
-    }
-    if($host !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/){
+	if($host !~ /\/$/){                                                                                                              
+		$host = $host.'/';
+	}
+	if($host !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/){
 		if($host !~ /^(https?:\/\/)[0-9]{1,3}(\.([0-9]){1,3}){3}\/$/){
 			print color 'red';
 			print "\n[FATAL ERROR] Invalid URL\n\n";
 			exit;
 		}
-    }
-    if(defined($cool_down)){
+	}
+	if(defined($cool_down)){
 		if($cool_down !~ /^[0-9]{1,}$/){
 			$cool_down = 0;
 		}
-	
 	}else{
 		$cool_down = 0;
 	}
 	if(open(LIST, $wordlist)){
 		print color 'yellow';
-		print "[SCANNING] $host\n\n";
+		print "[SCANNING] $host using '$wordlist'\n\n";
 		while(my $list = <LIST>){
 			chomp $list;
 			my $final = $host.$list;
@@ -99,7 +98,7 @@ if($host){
 				}
 				case(200){
 					print color 'green';
-					print "[+] Access OK -> ";
+					print "[+] OK -> ";
 					print $final, "\n";
 					$i = 1;
 				}
@@ -111,7 +110,6 @@ if($host){
 				}
 			}
 		}
-
 	}else{
 		print color 'red';
 		print  "[FATAL ERROR] wordlist $wordlist wasn't found !\n\n";
