@@ -22,18 +22,22 @@ system('clear');
 print"\n";
 print "------------------------------------------------\n";
 print "------------------- [ PERL ] -------------------\n";
-print "------- Admin Panel Finder v 1.3 ---------------\n";
+print "------- Admin Panel Finder v 1.3.1 --------------\n";
 print "-------------------- f1she3 --------------------\n";
 print "------------------------------------------------\n";
 print "\n";
 
+my $host;
+my $custom_wordlist;
+my $cool_down;
+my $verbose;
 my $i = 0;
 my $wordlist = 'wordlists/all.txt';
 my $options = GetOptions(
-    'h=s'   => \my $host,
-    'l=s'   => \my $custom_wordlist,
-    't=i'   => \my $cool_down,
-    'v'   	=> \my $verbose,
+    "h=s"   => \$host,
+    "l=s"   => \$custom_wordlist,
+    "t=i"   => \$cool_down,
+    "v" => \$verbose,
 );
 if(defined($custom_wordlist)){
 	$wordlist = $custom_wordlist;
@@ -89,14 +93,14 @@ if($host){
 						sleep($cool_down);
 					}
 				}
-				case(403){
+				case 403{
 					print color 'yellow';
 					print "[!] Forbidden -> ";
 					print $final, "\n";
 					my $i = 1;
 					sleep($cool_down);
 				}
-				case(200){
+				case 200{
 					print color 'green';
 					print "[+] OK -> ";
 					print $final, "\n";
