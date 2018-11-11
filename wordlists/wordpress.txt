@@ -7,3 +7,4 @@ blog/wp-login.asp
 blog/wp-login.php
 blog/wp-login
 wordpress
+wp
